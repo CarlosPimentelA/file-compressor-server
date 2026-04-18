@@ -1,11 +1,11 @@
 package main
 
 import (
+	"compressor_server/internal/core"
+	"compressor_server/internal/network"
+	"compressor_server/internal/pool"
 	"log"
 	"net"
-	"workers_server/internal/core"
-	"workers_server/internal/network"
-	"workers_server/internal/pool"
 )
 
 func main() {

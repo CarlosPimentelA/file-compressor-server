@@ -1,3 +1,3 @@
-module workers_server
+module compressor_server
 
 go 1.25.3

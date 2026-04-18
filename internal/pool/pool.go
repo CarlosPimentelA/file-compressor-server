@@ -1,11 +1,11 @@
 package pool
 
 import (
+	"compressor_server/internal/core"
 	"fmt"
 	"log"
 	"runtime"
 	"sync"
-	"workers_server/internal/core"
 )
 
 type WorkerPool struct {

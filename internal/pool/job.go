@@ -1,11 +1,11 @@
 package pool
 
 import (
+	"compressor_server/internal/core"
+	"compressor_server/internal/network"
 	"fmt"
 	"log"
 	"time"
-	"workers_server/internal/core"
-	"workers_server/internal/network"
 )
 
 type Job struct {
