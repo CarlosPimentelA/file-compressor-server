@@ -20,7 +20,8 @@ func NewJob(conn network.Connection) *Job {
 	}
 }
 
-func (j *Job) Execute(compressor *core.FileCompresor) error {
+func (j *Job) Execute(compressor core.FileCompresor) error {
+	defer j.Connection.Close()
 	data, err := j.Connection.Read()
 
 	if err != nil {
@@ -35,10 +36,12 @@ func (j *Job) Execute(compressor *core.FileCompresor) error {
 	if err != nil {
 		return fmt.Errorf("Compress error: %w", err)
 	}
-	return j.finalize(compressedData)
-}
 
-func (j *Job) finalize(fileCompresed []byte) error {
-	defer j.Connection.Close()
-	return j.Connection.Write(fileCompresed)
+	err = j.Connection.Write(compressedData)
+
+	if err != nil {
+		return fmt.Errorf("Write error: %w", err)
+	}
+
+	return nil
 }

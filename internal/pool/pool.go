@@ -42,7 +42,7 @@ func (wp *WorkerPool) worker() {
 				return
 			}
 
-			if err := job.Execute(wp.fileCompresor); err != nil {
+			if err := job.Execute(*wp.fileCompresor); err != nil {
 				log.Printf("Job error: %v", err)
 			}
 
@@ -70,11 +70,28 @@ func (wp *WorkerPool) Stop() {
 
 func (wp *WorkerPool) AddJob(job *Job) error {
 	select {
-	case wp.jobQueue <- job:
-		return nil
 	case <-wp.quit:
 		return fmt.Errorf("The worker pool is stopping")
 	default:
+	}
+
+	select {
+	case wp.jobQueue <- job:
+		return nil
+	default:
 		return fmt.Errorf("The job queue is full")
 	}
+}
+
+func (wp *WorkerPool) IsStopped() bool {
+	select {
+	case <-wp.quit:
+		return true
+	default:
+		return false
+	}
+}
+
+func (wp *WorkerPool) MaxWorkers() int {
+	return wp.maxWorkers
 }
