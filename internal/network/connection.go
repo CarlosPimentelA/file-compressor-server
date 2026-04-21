@@ -1,6 +1,7 @@
 package network
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"net"
@@ -30,14 +31,20 @@ func (tcpC *TCPConnection) Read() ([]byte, error) {
 		return nil, err
 	}
 
-	return data, nil
+	return Decode(data)
 }
 
 func (tcpC *TCPConnection) Write(data []byte) error {
-	_, err := tcpC.conn.Write(data)
+	encodedData, err := Encode(data)
 
 	if err != nil {
-		log.Printf("Write error: %v", err)
+		log.Printf("Encode err: %v", err)
+	}
+
+	_, err = tcpC.conn.Write(encodedData)
+
+	if err != nil {
+		return fmt.Errorf("Error writing to connection: %v", err)
 	}
 
 	return nil
